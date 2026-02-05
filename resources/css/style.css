@@ -47,3 +47,10 @@ body {
 .login-link:hover {
     text-decoration: underline;
 }
+.navbar-brand {
+    font-weight: 600;
+    color: #b02a37 !important;
+}
+.card {
+    border-radius: 12px;
+}
