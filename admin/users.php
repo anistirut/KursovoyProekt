@@ -81,6 +81,13 @@
             <a href="add/addUser.php" class="btn btn-accent">Добавить пользователя</a>
         </div>
 
+        <?php if(isset($_GET['success']) && $_GET['success'] === 'deleted'): ?>
+            <div class="alert alert-success">Пользователь успешно удалён!</div>
+        <?php endif; ?>
+        <?php if(isset($_GET['error']) && $_GET['error'] === 'own'): ?>
+            <div class="alert alert-danger">Вы не можете удалить себя!</div>
+        <?php endif; ?>
+
         <div class="table-responsive">
             <table class="table table-striped table-bordered align-middle">
                 <thead class="table-light">
