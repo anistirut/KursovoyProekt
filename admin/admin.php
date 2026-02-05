@@ -55,7 +55,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Admin Panel</a>
     <div class="collapse navbar-collapse" id="navbarAdmin">
