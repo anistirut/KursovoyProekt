@@ -27,8 +27,6 @@
     $username = $read["Name"]. ' '. $read["Surname"];
     $dishToEdit = $_GET["id"];
     $query = $mysqli->query("SELECT * FROM `Dishes` WHERE `Id` =".$dishToEdit);
-
-    $query = $mysqli->query("SELECT * FROM `Dishes` WHERE `Id` = ".$dishToEdit);
     $dish = $query->fetch_assoc();
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {

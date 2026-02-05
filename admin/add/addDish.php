@@ -30,7 +30,6 @@
         $name = trim($_POST['name']);
         $compound = trim($_POST['compound']);
         $price = (float)$_POST['price'];
-        // $imgPath = $dish['Img'];
 
         if (!empty($_FILES['img']['name'])) {
             $uploadDir = '../../resources/img/';
