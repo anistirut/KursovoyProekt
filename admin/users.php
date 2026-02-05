@@ -104,12 +104,12 @@
                 <tbody>
                     <?php while ($u = $usersQuery->fetch_assoc()): ?>
                         <tr>
-                            <td><?= htmlspecialchars($u['Id']) ?></td>
-                            <td><?= htmlspecialchars($u['Surname']) ?></td>
-                            <td><?= htmlspecialchars($u['Name']) ?></td>
-                            <td><?= htmlspecialchars($u['Patronomyc']) ?></td>
-                            <td><?= htmlspecialchars($u['Phone']) ?></td>
-                            <td><?= htmlspecialchars($u['Role']) ?></td>
+                            <td><?= $u['Id'] ?></td>
+                            <td><?= $u['Surname'] ?></td>
+                            <td><?= $u['Name'] ?></td>
+                            <td><?= $u['Patronomyc'] ?></td>
+                            <td><?= $u['Phone'] ?></td>
+                            <td><?= $u['Role'] ?></td>
                             <td>
                                 <a href="edit/editUser.php?id=<?= $u['Id'] ?>" class="btn btn-sm btn-primary">Редактировать</a>
                                 <a href="delete/deleteUser.php?id=<?= $u['Id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Удалить этого пользователя?')">Удалить</a>

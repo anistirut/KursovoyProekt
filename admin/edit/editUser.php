@@ -39,14 +39,18 @@
 
         if ($password) {
             $password = password_hash($password, PASSWORD_DEFAULT);
-            $mysqli->query("UPDATE `Users` SET `Surname`='{$surname}',`Name`='{$name}',`Patronomyc`='{$patronomyc}',`Password`='$password',`Role`='{$role}' WHERE `Id`= ".$userToEdit);
+            $mysqli->query("UPDATE `Users` SET `Surname`='{$surname}',`Name`='{$name}',`Patronomyc`='{$patronomyc}',`Password`='{$password}',`Role`='{$role}' WHERE `Id`= ".$userToEdit);
         } else {
             $mysqli->query("UPDATE `Users` SET `Surname`='{$surname}',`Name`='{$name}',`Patronomyc`='{$patronomyc}',`Role`='{$role}' WHERE `Id`= ".$userToEdit);
         }
+        header("Location: ../users.php");
+        exit;
     }
 
     $query = $mysqli->query("SELECT * FROM `Users` WHERE `Id` = ".$userToEdit);
     $user = $query->fetch_assoc();
+
+    
 ?>
 <!DOCTYPE html>
 <html lang="ru">

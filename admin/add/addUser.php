@@ -41,6 +41,8 @@
             $password = password_hash($password, PASSWORD_DEFAULT);
             $mysqli->query("INSERT INTO `Users`(`Surname`, `Name`, `Patronomyc`, `Phone`, `Password`, `Role`) VALUES ('{$surname}','{$name}','{$patronomyc}','{$phone}','{$password}','{$role}')");
         }
+        header("Location: ../users.php");
+        exit;
     }
 ?>
 <!DOCTYPE html>
