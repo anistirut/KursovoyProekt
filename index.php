@@ -2,18 +2,22 @@
     session_start();
     include("./settings/connect_database.php");
 
-    if(isset($_SESSION["user"])) {
-        if($_SESSION["user"] != -1) {
-            $query = $mysqli->query("SELECT * FROM `Users` WHERE `Id` = ".$_SESSION["user"]);
-            //Добавить проверку на роль пользователя
-            while($read = $query->fetch_row()) {
-                if($read[6] == "") {
-                    header("Location: client/client.php");
-                } else if($read[6] == "") {
-                    header("Location: waiter/waiter.php");
-                } else if($read[6] == "") {
-                    header("Location: admin/admin.php");
-                }
+    if(isset($_SESSION["user"]) && $_SESSION["user"] != -1) {
+        $query = $mysqli->query("SELECT `Role` FROM `Users` WHERE `Id` = ".$_SESSION["user"]);
+
+        if($query && $query->num_rows == 1) {
+            $read = $query->fetch_assoc();
+            $role = $read["Role"];
+
+            if ($role == 'client') {
+                header("Location: client/client.php");
+                exit;
+            } elseif ($role == 'waiter') {
+                header("Location: waiter/waiter.php");
+                exit;
+            } elseif ($role == 'admin') {
+                header("Location: admin/admin.php");
+                exit;
             }
         }
     }
