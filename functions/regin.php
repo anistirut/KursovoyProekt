@@ -2,9 +2,9 @@
     session_start();
     include("../settings/connect_database.php");
 
-    $surname = $_POST["Surname"];
-    $name = $_POST["Name"];
-    $patronomyc = $_POST["Patronomyc"];
+    $surname = $_POST["surname"];
+    $name = $_POST["name"];
+    $patronomyc = $_POST["patronomyc"];
     $phone = preg_replace('/\D+/', '', $_POST['phone']);
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 

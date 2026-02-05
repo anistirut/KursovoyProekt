@@ -11,6 +11,12 @@ body {
     border-radius: 16px;
     border: none;
 }
+.register-card {
+    max-width: 420px;
+    width: 100%;
+    border-radius: 16px;
+    border: none;
+}
 .login-title {
     font-weight: 600;
 }
@@ -32,5 +38,12 @@ body {
     font-weight: 500;
 }
 .register-link:hover {
+    text-decoration: underline;
+}
+.login-link {
+    text-decoration: none;
+    font-weight: 500;
+}
+.login-link:hover {
     text-decoration: underline;
 }
