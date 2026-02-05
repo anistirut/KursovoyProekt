@@ -2,7 +2,7 @@
     session_start();
     include("../settings/connect_database.php");
     
-    $phone = $_POST['phone'];
+    $phone = preg_replace('/\D+/', '', $_POST['phone']);
     $password = $_POST['password'];
 
     $query = $mysqli->query("SELECT * FROM `Users` WHERE `Phone`='".$phone."' AND `Password`='".$password."';");

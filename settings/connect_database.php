@@ -1,3 +1,3 @@
 <?php
-    $mysqli = new mysqli('127.0.0.1', 'root', '', 'turkish_restaurant');
+    $mysqli = new mysqli('127.0.0.1', 'root', 'root', 'turkish_restaurant');
 ?>
