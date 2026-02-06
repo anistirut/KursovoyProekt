@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Фев 04 2026 г., 19:36
+-- Время создания: Фев 06 2026 г., 09:10
 -- Версия сервера: 5.7.39-log
 -- Версия PHP: 8.1.9
 
@@ -35,6 +35,14 @@ CREATE TABLE `Dishes` (
   `Img` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Дамп данных таблицы `Dishes`
+--
+
+INSERT INTO `Dishes` (`Id`, `Name`, `Сompound`, `Price`, `Img`) VALUES
+(2, 'Люля-кебаб', 'Мясо,лук,лаваш', '199.99', 'dish_69847f63ae214.jpg'),
+(4, 'Чорба', 'Чечевица 1 стакан, Бульон говяжий 2 стакана, Морковь 1 штука, Лук репчатый 1 штука, Тимьян сушеный', '159.98', 'dish_6984841fbc41f.jpg');
+
 -- --------------------------------------------------------
 
 --
@@ -45,9 +53,18 @@ CREATE TABLE `Orders` (
   `Id` int(11) NOT NULL,
   `IdClient` int(11) NOT NULL,
   `IdWaiter` int(11) NOT NULL,
-  `TotalSum` int(11) NOT NULL,
+  `TotalSum` decimal(10,2) NOT NULL,
   `Status` enum('accepted','progress','ready') COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `Orders`
+--
+
+INSERT INTO `Orders` (`Id`, `IdClient`, `IdWaiter`, `TotalSum`, `Status`) VALUES
+(4, 7, 6, '559.96', 'accepted'),
+(5, 7, 6, '359.97', 'accepted'),
+(31, 7, 6, '679.93', 'progress');
 
 -- --------------------------------------------------------
 
@@ -58,8 +75,21 @@ CREATE TABLE `Orders` (
 CREATE TABLE `OrdersDishes` (
   `Id` int(11) NOT NULL,
   `IdOrder` int(11) NOT NULL,
-  `IdDishes` int(11) NOT NULL
+  `IdDishes` int(11) NOT NULL,
+  `Quantity` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `OrdersDishes`
+--
+
+INSERT INTO `OrdersDishes` (`Id`, `IdOrder`, `IdDishes`, `Quantity`) VALUES
+(9, 4, 2, 2),
+(10, 4, 4, 1),
+(11, 5, 2, 1),
+(12, 5, 4, 1),
+(63, 31, 2, 1),
+(64, 31, 4, 3);
 
 -- --------------------------------------------------------
 
@@ -76,6 +106,15 @@ CREATE TABLE `Users` (
   `Password` varchar(1000) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Role` enum('client','waiter','admin') COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `Users`
+--
+
+INSERT INTO `Users` (`Id`, `Surname`, `Name`, `Patronomyc`, `Phone`, `Password`, `Role`) VALUES
+(4, 'Админов', 'Админ', 'Админович', '79222222225', '$2y$10$0oLQQC6VYG7mJGgJJuR4i.Fk8nu4exX0TAiGX1lmxg2Pgj7/HuPoa', 'admin'),
+(6, 'Официантовна', 'Официантка', 'Официантовична', '79222222223', '$2y$10$yb.Um7scHBgEtJefQGegQOHKl5dOT.9vF3.g1AU.ALYqj90iJA/Mm', 'waiter'),
+(7, 'Турицина', 'Елизавета', 'Сергеевна', '79222222222', '$2y$10$d641SFo827AZ.Yf/dC8tn.PCboJMvYP/D0wu08fafKxOR7xYfLpmq', 'client');
 
 --
 -- Индексы сохранённых таблиц
@@ -117,25 +156,25 @@ ALTER TABLE `Users`
 -- AUTO_INCREMENT для таблицы `Dishes`
 --
 ALTER TABLE `Dishes`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT для таблицы `OrdersDishes`
 --
 ALTER TABLE `OrdersDishes`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT для таблицы `Users`
 --
 ALTER TABLE `Users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
