@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Фев 06 2026 г., 09:10
+-- Время создания: Фев 06 2026 г., 11:46
 -- Версия сервера: 5.7.39-log
 -- Версия PHP: 8.1.9
 
@@ -52,19 +52,18 @@ INSERT INTO `Dishes` (`Id`, `Name`, `Сompound`, `Price`, `Img`) VALUES
 CREATE TABLE `Orders` (
   `Id` int(11) NOT NULL,
   `IdClient` int(11) NOT NULL,
-  `IdWaiter` int(11) NOT NULL,
+  `IdCourier` int(11) NOT NULL,
   `TotalSum` decimal(10,2) NOT NULL,
-  `Status` enum('accepted','progress','ready') COLLATE utf8mb4_unicode_ci NOT NULL
+  `Address` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `Status` enum('accepted','progress','ready','delivery','delivered') COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Дамп данных таблицы `Orders`
 --
 
-INSERT INTO `Orders` (`Id`, `IdClient`, `IdWaiter`, `TotalSum`, `Status`) VALUES
-(4, 7, 6, '559.96', 'accepted'),
-(5, 7, 6, '359.97', 'accepted'),
-(31, 7, 6, '679.93', 'progress');
+INSERT INTO `Orders` (`Id`, `IdClient`, `IdCourier`, `TotalSum`, `Address`, `Status`) VALUES
+(33, 7, 9, '159.98', 'Пермь, улица Луначарского, 24с3', 'delivery');
 
 -- --------------------------------------------------------
 
@@ -84,12 +83,7 @@ CREATE TABLE `OrdersDishes` (
 --
 
 INSERT INTO `OrdersDishes` (`Id`, `IdOrder`, `IdDishes`, `Quantity`) VALUES
-(9, 4, 2, 2),
-(10, 4, 4, 1),
-(11, 5, 2, 1),
-(12, 5, 4, 1),
-(63, 31, 2, 1),
-(64, 31, 4, 3);
+(65, 33, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -104,7 +98,7 @@ CREATE TABLE `Users` (
   `Patronomyc` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `Phone` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `Password` varchar(1000) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Role` enum('client','waiter','admin') COLLATE utf8mb4_unicode_ci NOT NULL
+  `Role` enum('client','courier','admin') COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -113,8 +107,9 @@ CREATE TABLE `Users` (
 
 INSERT INTO `Users` (`Id`, `Surname`, `Name`, `Patronomyc`, `Phone`, `Password`, `Role`) VALUES
 (4, 'Админов', 'Админ', 'Админович', '79222222225', '$2y$10$0oLQQC6VYG7mJGgJJuR4i.Fk8nu4exX0TAiGX1lmxg2Pgj7/HuPoa', 'admin'),
-(6, 'Официантовна', 'Официантка', 'Официантовична', '79222222223', '$2y$10$yb.Um7scHBgEtJefQGegQOHKl5dOT.9vF3.g1AU.ALYqj90iJA/Mm', 'waiter'),
-(7, 'Турицина', 'Елизавета', 'Сергеевна', '79222222222', '$2y$10$d641SFo827AZ.Yf/dC8tn.PCboJMvYP/D0wu08fafKxOR7xYfLpmq', 'client');
+(7, 'Турицина', 'Елизавета', 'Сергеевна', '79222222222', '$2y$10$d641SFo827AZ.Yf/dC8tn.PCboJMvYP/D0wu08fafKxOR7xYfLpmq', 'client'),
+(8, 'Иванов', 'Иван', 'Иванович', '79120000000', '$2y$10$QXaU0KSUpxGJjnHk1p.1UerXKtVK6feOxxW2lklqv2ZObhe9//eKC', 'client'),
+(9, 'Курьеров', 'Курьер', 'Курьерович', '79222222228', '$2y$10$8H9nI6x4Pqig6CXRu5XJGub7rlUxFACo7Q.3LFdJpx2KMP3S0t8My', 'courier');
 
 --
 -- Индексы сохранённых таблиц
@@ -132,7 +127,7 @@ ALTER TABLE `Dishes`
 ALTER TABLE `Orders`
   ADD PRIMARY KEY (`Id`),
   ADD KEY `IdClient` (`IdClient`),
-  ADD KEY `IdWaiter` (`IdWaiter`);
+  ADD KEY `IdWaiter` (`IdCourier`);
 
 --
 -- Индексы таблицы `OrdersDishes`
@@ -162,19 +157,19 @@ ALTER TABLE `Dishes`
 -- AUTO_INCREMENT для таблицы `Orders`
 --
 ALTER TABLE `Orders`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT для таблицы `OrdersDishes`
 --
 ALTER TABLE `OrdersDishes`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT для таблицы `Users`
 --
 ALTER TABLE `Users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
@@ -185,7 +180,7 @@ ALTER TABLE `Users`
 --
 ALTER TABLE `Orders`
   ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`IdClient`) REFERENCES `Users` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`IdWaiter`) REFERENCES `Users` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`IdCourier`) REFERENCES `Users` (`Id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `OrdersDishes`
