@@ -1,6 +1,48 @@
 <?php
     session_start();
     include("./settings/connect_database.php");
+    $errors = [];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $surname = trim($_POST["surname"]);
+        $name = trim($_POST["name"]);
+        $patronomyc = trim($_POST["patronomyc"]);
+        $phone = preg_replace('/\D+/', '', $_POST['phone']);
+        $password = $_POST['password'];
+        $confirm_password = $_POST['confirm_password'];
+
+        if (empty($surname) || empty($name) || empty($patronomyc)) {
+            $errors[] = "Пожалуйста, заполните все поля ФИО.";
+        }
+        if (strlen($phone) < 10) {
+            $errors[] = "Введите корректный номер телефона.";
+        }
+        if (strlen($password) < 6) {
+            $errors[] = "Пароль должен быть не менее 6 символов.";
+        }
+        if ($password !== $confirm_password) {
+            $errors[] = "Пароли не совпадают.";
+        }
+
+        $query = $mysqli->query("SELECT * FROM `Users` WHERE `Phone`='".$phone."'");
+        if ($query && $query->num_rows > 0) {
+            $errors[] = "Пользователь с таким номером телефона уже зарегистрирован.";
+        }
+
+        if (empty($errors)) {
+            $passwordHash = password_hash($password, PASSWORD_DEFAULT);
+
+            $stmt = $mysqli->prepare("INSERT INTO `Users`(`Surname`, `Name`, `Patronomyc`, `Phone`, `Password`, `Role`) VALUES (?, ?, ?, ?, ?, 'client')");
+            $stmt->bind_param("sssss", $surname, $name, $patronomyc, $phone, $passwordHash);
+            if ($stmt->execute()) {
+                $_SESSION['user'] = $stmt->insert_id;
+                header("Location: client/client.php");
+                exit;
+            } else {
+                $errors[] = "Ошибка регистрации: " . $mysqli->error;
+            }
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -17,7 +59,17 @@
         <h3 class="text-center mb-4 login-title">Регистрация</h3>
         <p class="text-center text-muted mb-4">Онлайн-ресторан турецкой кухни</p>
 
-        <form method="post" action="functions/regin.php">
+        <?php if (!empty($errors)): ?>
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    <?php foreach($errors as $error): ?>
+                        <li><?= htmlspecialchars($error) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <form method="post" action="">
             <div class="mb-3">
                 <label for="surname" class="form-label">Фамилия</label>
                 <input type="text" class="form-control" id="surname" name="surname" required>

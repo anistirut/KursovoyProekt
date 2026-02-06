@@ -1,6 +1,46 @@
 <?php
     session_start();
     include("./settings/connect_database.php");
+
+    $errors = [];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $phone = preg_replace('/\D+/', '', $_POST['phone']);
+        $password = $_POST['password'];
+
+        if (empty($phone) || empty($password)) {
+            $errors[] = "Пожалуйста, заполните все поля.";
+        } else {
+            $stmt = $mysqli->prepare("SELECT Id, Password, Role FROM Users WHERE Phone = ?");
+            $stmt->bind_param("s", $phone);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            if ($user = $result->fetch_assoc()) {
+                if (password_verify($password, $user['Password'])) {
+                    $_SESSION['user'] = $user['Id'];
+
+                    switch ($user['Role']) {
+                        case 'client':
+                            header("Location: client/client.php");
+                            exit;
+                        case 'courier':
+                            header("Location: courier/courier.php");
+                            exit;
+                        case 'admin':
+                            header("Location: admin/admin.php");
+                            exit;
+                        default:
+                            $errors[] = "Неизвестная роль пользователя.";
+                    }
+                } else {
+                    $errors[] = "Неверный пароль.";
+                }
+            } else {
+                $errors[] = "Пользователь с таким номером телефона не найден.";
+            }
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -17,7 +57,17 @@
         <h3 class="text-center mb-4 login-title">Авторизация</h3>
         <p class="text-center text-muted mb-4">Онлайн-ресторан турецкой кухни</p>
 
-        <form method="post" action="functions/login.php">
+        <?php if (!empty($errors)): ?>
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    <?php foreach($errors as $error): ?>
+                        <li><?= htmlspecialchars($error) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <form method="post" action="">
             <div class="mb-3">
                 <label for="phone" class="form-label">Номер телефона</label>
                 <input 
@@ -28,6 +78,7 @@
                     placeholder="+7 (___) ___-__-__"
                     pattern="^\+?[0-9\s\-\(\)]{10,20}$"
                     required
+                    value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>"
                 >
             </div>
 
