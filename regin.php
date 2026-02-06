@@ -41,7 +41,6 @@
                     id="phone"
                     name="phone"
                     placeholder="+7 (___) ___-__-__"
-                    pattern="^\+?[0-9\s\-\(\)]{10,20}$"
                     required
                 >
             </div>
@@ -70,3 +69,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<script>
+    document.getElementById('phone').addEventListener('input', function () {
+        this.value = this.value.replace(/[^0-9+\-\(\)\s]/g, '');
+    });
+</script>

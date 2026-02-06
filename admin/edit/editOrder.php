@@ -12,8 +12,8 @@
                 if ($role == 'client') {
                     header("Location: ../../client/client.php");
                     exit;
-                } elseif ($role == 'waiter') {
-                    header("Location: ../../waiter/waiter.php");
+                } elseif ($role == 'courier') {
+                    header("Location: ../../courier/courier.php");
                     exit;
                 }
             }
@@ -40,6 +40,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $status = $_POST['status'];
+        $address = $_POST['address'] ?? '';
         $chosen = $_POST['dishes'] ?? [];
 
         $total = 0;
@@ -54,7 +55,7 @@
             $mysqli->query("INSERT INTO `OrdersDishes` (`IdOrder`, `IdDishes`, `Quantity`) VALUES ({$id}, {$dishId}, {$qty})");
         }
 
-        $mysqli->query("UPDATE `Orders` SET `TotalSum`={$total}, `Status`='{$status}' WHERE `Id`={$id}");
+        $mysqli->query("UPDATE `Orders` SET `TotalSum`={$total}, `Address`='{$address}' , `Status`='{$status}' WHERE `Id`={$id}");
         header("Location: ../orders.php");
         exit;
     }
@@ -126,11 +127,20 @@
             </div>
 
             <div class="mb-3">
+                <label for="address" class="form-label">Адрес доставки</label>
+                <input type="text" id="address" name="address" class="form-control" 
+                    value="<?= htmlspecialchars($order['Address']) ?>" required>
+            </div>
+
+
+            <div class="mb-3">
                 <label>Статус</label>
                 <select name="status" class="form-select">
                     <option value="accepted" <?= $order['Status']=='accepted'?'selected':'' ?>>Принят</option>
                     <option value="progress" <?= $order['Status']=='progress'?'selected':'' ?>>Готовится</option>
                     <option value="ready" <?= $order['Status']=='ready'?'selected':'' ?>>Готов</option>
+                    <option value="delivery" <?= $order['Status']=='delivery'?'selected':'' ?>>В доставке</option>
+                    <option value="delivered" <?= $order['Status']=='delivered'?'selected':'' ?>>Доставлен</option>
                 </select>
             </div>
 

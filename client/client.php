@@ -12,8 +12,8 @@
                 if ($role == 'admin') {
                     header("Location: ../admin/admin.php");
                     exit;
-                } elseif ($role == 'waiter') {
-                    header("Location: ../waiter/waiter.php");
+                } elseif ($role == 'courier') {
+                    header("Location: ../courier/courier.php");
                     exit;
                 }
             }
@@ -80,7 +80,7 @@
         </div>
     </nav>
     <div class="container">
-        <form method="post" action="createOrder.php">
+        <form method="post" action="checkout.php">
             <div class="row g-4">
                 <?php while($dish = $dishesQuery->fetch_assoc()): ?>
                     <div class="col-md-4">
@@ -91,7 +91,7 @@
                                 <p class="card-text"><?= $dish['Сompound'] ?></p>
                                 <p class="card-text fw-bold"><?= $dish['Price'] ?> ₽</p>
                                 <div class="mt-auto d-flex gap-2 align-items-center">
-                                    <input type="number" min="1" value="1" name="dishes[<?= $dish['Id'] ?>]" class="form-control form-control-sm quantity-input" data-id="<?= $dish['Id'] ?>" data-price="<?= $dish['Price'] ?>">
+                                    <input type="number" min="0" value="0" name="dishes[<?= $dish['Id'] ?>]" class="form-control form-control-sm quantity-input" data-id="<?= $dish['Id'] ?>" data-price="<?= $dish['Price'] ?>">
                                 </div>
                             </div>
                         </div>

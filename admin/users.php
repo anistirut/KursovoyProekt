@@ -12,8 +12,8 @@
                 if ($role == 'client') {
                     header("Location: ../client/client.php");
                     exit;
-                } elseif ($role == 'waiter') {
-                    header("Location: ../waiter/waiter.php");
+                } elseif ($role == 'courier') {
+                    header("Location: ../courier/courier.php");
                     exit;
                 }
             }

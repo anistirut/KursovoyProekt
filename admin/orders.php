@@ -12,8 +12,8 @@
                 if ($role == 'client') {
                     header("Location: ../client/client.php");
                     exit;
-                } elseif ($role == 'waiter') {
-                    header("Location: ../waiter/waiter.php");
+                } elseif ($role == 'courier') {
+                    header("Location: ../courier/courier.php");
                     exit;
                 }
             }
@@ -25,13 +25,13 @@
     }
     $username = $read["Name"]. ' '. $read["Surname"];
     $ordersQuery = $mysqli->query("SELECT 
-            o.Id, o.TotalSum, o.Status,
+            o.Id, o.TotalSum, o.Address , o.Status,
             c.Name AS ClientName, c.Surname AS ClientSurname,
-            w.Name AS WaiterName, w.Surname AS WaiterSurname,
+            w.Name AS CourierName, w.Surname AS CourierSurname,
             GROUP_CONCAT(CONCAT(d.Name, ' (', od.Quantity, ')') SEPARATOR ', ') AS Dishes
         FROM Orders o
         JOIN Users c ON c.Id = o.IdClient
-        JOIN Users w ON w.Id = o.IdWaiter
+        JOIN Users w ON w.Id = o.IdCourier
         LEFT JOIN OrdersDishes od ON od.IdOrder = o.Id
         LEFT JOIN Dishes d ON d.Id = od.IdDishes
         GROUP BY o.Id
@@ -101,6 +101,7 @@
                         <th>Официант</th>
                         <th>Блюда</th>
                         <th>Сумма</th>
+                        <th>Адрес</th>
                         <th>Статус</th>
                     </tr>
                 </thead>
@@ -109,9 +110,10 @@
                         <tr>
                             <td><?= $o['Id'] ?></td>
                             <td><?= $o['ClientName'].' '.$o['ClientSurname'] ?></td>
-                            <td><?= $o['WaiterName'].' '.$o['WaiterSurname'] ?></td>
+                            <td><?= $o['CourierName'].' '.$o['CourierSurname'] ?></td>
                             <td><?= $o['Dishes'] ?: '—' ?></td>
                             <td><?= $o['TotalSum'] ?> ₽</td>
+                            <td><?= $o['Address'] ?></td>
                             <td><?= $o['Status'] ?></td>
                             <td>
                                 <a href="edit/editOrder.php?id=<?= $o['Id'] ?>" class="btn btn-sm btn-primary">Редактировать</a>

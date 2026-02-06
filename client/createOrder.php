@@ -12,8 +12,8 @@
                 if ($role == 'admin') {
                     header("Location: ../admin/admin.php");
                     exit;
-                } elseif ($role == 'waiter') {
-                    header("Location: ../waiter/waiter.php");
+                } elseif ($role == 'courier') {
+                    header("Location: ../courier/courier.php");
                     exit;
                 }
             }
@@ -36,17 +36,18 @@
         if (!empty($selected)) {
             $total = 0;
 
-            $waiterQuery = $mysqli->query("SELECT u.Id, COUNT(o.Id) AS orders_count
+            $courierQuery = $mysqli->query("SELECT u.Id, COUNT(o.Id) AS orders_count
                 FROM Users u
-                LEFT JOIN Orders o ON o.IdWaiter = u.Id 
-                WHERE u.Role = 'waiter'
+                LEFT JOIN Orders o ON o.IdCourier = u.Id
+                WHERE u.Role = 'courier'
                 GROUP BY u.Id
                 ORDER BY orders_count ASC
                 LIMIT 1");
-            $waiter = $waiterQuery->fetch_assoc();
-            $waiterId = $waiter['Id'] ?? 0;
+            $courier = $courierQuery->fetch_assoc();
+            $courierId = $courier['Id'] ?? 0;
+            $address = $_POST['address'] ?? '';
 
-            $mysqli->query("INSERT INTO `Orders` (`IdClient`, `IdWaiter`, `TotalSum`, `Status`) VALUES ({$client['Id']}, {$waiterId}, 0, 'accepted')");
+            $mysqli->query("INSERT INTO `Orders` (`IdClient`, `IdCourier`, `TotalSum`, `Address`, `Status`) VALUES ({$client['Id']}, {$courierId}, 0, '{$address}', 'accepted')");
             $orderId = $mysqli->insert_id;
 
             foreach ($selected as $dishId => $qty) {

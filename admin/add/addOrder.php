@@ -12,8 +12,8 @@
                 if ($role == 'client') {
                     header("Location: ../../client/client.php");
                     exit;
-                } elseif ($role == 'waiter') {
-                    header("Location: ../../waiter/waiter.php");
+                } elseif ($role == 'courier') {
+                    header("Location: ../../courier/courier.php");
                     exit;
                 }
             }
@@ -26,16 +26,17 @@
 
     $username = $read["Name"]. ' '. $read["Surname"];
     $clients = $mysqli->query("SELECT `Id`, `Name`, `Surname` FROM `Users` WHERE `Role`='client'");
-    $waiters = $mysqli->query("SELECT `Id`, `Name`, `Surname` FROM `Users` WHERE `Role`='waiter'");
+    $couriers = $mysqli->query("SELECT `Id`, `Name`, `Surname` FROM `Users` WHERE `Role`='courier'");
     $dishes = $mysqli->query("SELECT `Id`, `Name`, `Price` FROM `Dishes`");
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $client = $_POST['client'];
-        $waiter = $_POST['waiter'];
+        $courier = $_POST['courier'];
         $status = $_POST['status'];
+        $address = $_POST['address'] ?? '';
 
         $dishesSelected = $_POST['dishes'] ?? [];
-        $mysqli->query("INSERT INTO `Orders` (`IdClient`, `IdWaiter`, `TotalSum`, `Status`) VALUES ({$client}, {$waiter}, 0, '{$status}')");
+        $mysqli->query("INSERT INTO `Orders` (`IdClient`, `IdCourier`, `TotalSum`, `Address`, `Status`) VALUES ({$client}, {$courier}, 0, '{$address}', '{$status}')");
 
         $orderId = $mysqli->insert_id;
         $total = 0;
@@ -120,9 +121,9 @@
         </div>
 
         <div class="mb-3">
-            <label>Официант</label>
-            <select name="waiter" class="form-select" required>
-                <?php while($w=$waiters->fetch_assoc()): ?>
+            <label>Курьер</label>
+            <select name="courier" class="form-select" required>
+                <?php while($w=$couriers->fetch_assoc()): ?>
                     <option value="<?= $w['Id'] ?>">
                         <?= $w['Surname'].' '.$w['Name'] ?>
                     </option>
@@ -144,11 +145,18 @@
         </div>
 
         <div class="mb-3">
+            <label>Адрес доставки</label>
+            <input type="text" name="address" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
             <label>Статус</label>
             <select name="status" class="form-select">
                 <option value="accepted">Принят</option>
                 <option value="progress">Готовится</option>
                 <option value="ready">Готов</option>
+                <option value="delivery">В доставке</option>
+                <option value="delivered">Доставлен</option>
             </select>
         </div>
 

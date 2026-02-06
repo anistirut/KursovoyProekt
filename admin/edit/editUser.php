@@ -12,8 +12,8 @@
                 if ($role == 'client') {
                     header("Location: ../../client/client.php");
                     exit;
-                } elseif ($role == 'waiter') {
-                    header("Location: ../../waiter/waiter.php");
+                } elseif ($role == 'courier') {
+                    header("Location: ../../courier/courier.php");
                     exit;
                 }
             }
@@ -129,7 +129,7 @@
             <label for="role" class="form-label">Роль</label>
             <select class="form-select" id="role" name="role" required>
                 <option value="client" <?= $user['Role'] === 'client' ? 'selected' : '' ?>>client</option>
-                <option value="waiter" <?= $user['Role'] === 'waiter' ? 'selected' : '' ?>>waiter</option>
+                <option value="courier" <?= $user['Role'] === 'courier' ? 'selected' : '' ?>>courier</option>
                 <option value="admin" <?= $user['Role'] === 'admin' ? 'selected' : '' ?>>admin</option>
             </select>
         </div>

@@ -12,8 +12,8 @@
                 if ($role == 'admin') {
                     header("Location: ../admin/admin.php");
                     exit;
-                } elseif ($role == 'waiter') {
-                    header("Location: ../waiter/waiter.php");
+                } elseif ($role == 'courier') {
+                    header("Location: ../courier/courier.php");
                     exit;
                 }
             }
@@ -30,10 +30,13 @@
     $username = $read["Name"]. ' '. $read["Surname"];
 
     $statusMap = [
-        'accepted' => 'Принят',
-        'progress' => 'Готовится',
-        'ready'    => 'Готов'
+        'accepted'  => 'Принят',
+        'progress'  => 'Готовится',
+        'ready'     => 'Готов',
+        'delivery'  => 'В доставке',
+        'delivered' => 'Доставлен'
     ];
+
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
         $name = trim($_POST['name']);
@@ -53,7 +56,7 @@
     }
 
     $ordersQuery = $mysqli->query("SELECT 
-            o.Id, o.TotalSum, o.Status, o.IdWaiter,
+            o.Id, o.TotalSum, o.Address, o.Status, o.IdCourier,
             GROUP_CONCAT(d.Name, ' (', od.Quantity, 'шт)') AS Dishes
         FROM Orders o
         LEFT JOIN OrdersDishes od ON od.IdOrder = o.Id
@@ -114,6 +117,7 @@
                     <tr>
                         <th>Блюда</th>
                         <th>Сумма</th>
+                        <th>Адрес</th>
                         <th>Статус</th>
                     </tr>
                 </thead>
@@ -122,6 +126,7 @@
                         <tr>
                             <td><?= $order['Dishes'] ?: '—' ?></td>
                             <td><?= $order['TotalSum'] ?> ₽</td>
+                            <td><?= $order['Address'] ?></td>
                             <td><?= $statusMap[$order['Status']] ?? $order['Status'] ?></td>
                         </tr>
                     <?php endwhile; ?>

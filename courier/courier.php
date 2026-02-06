@@ -25,25 +25,25 @@
     }
 
     $username = $read["Name"]. ' '. $read["Surname"];
-    $waiterId = $_SESSION['user'];
+    $courierId = $_SESSION['user'];
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['orderId'], $_POST['status'])) {
         $orderId = $_POST['orderId'];
         $status = $_POST['status'];
-        $mysqli->query("UPDATE `Orders` SET `Status`='{$status}' WHERE `Id`={$orderId} AND `IdWaiter`={$waiterId}");
-        header("Location: waiter.php");
+        $mysqli->query("UPDATE `Orders` SET `Status`='{$status}' WHERE `Id`={$orderId} AND `IdCourier`={$courierId}");
+        header("Location: courier.php");
         exit;
     }
 
     $ordersQuery = $mysqli->query("SELECT 
-            o.Id, o.TotalSum, o.Status,
+            o.Id, o.TotalSum, o.Address , o.Status,
             c.Name AS ClientName, c.Surname AS ClientSurname,
             GROUP_CONCAT(CONCAT(d.Name, ' (', od.Quantity, ')') SEPARATOR ', ') AS Dishes
         FROM Orders o
         JOIN Users c ON c.Id = o.IdClient
         LEFT JOIN OrdersDishes od ON od.IdOrder = o.Id
         LEFT JOIN Dishes d ON d.Id = od.IdDishes
-        WHERE o.IdWaiter = {$waiterId}
+        WHERE o.IdCourier = {$courierId}
         GROUP BY o.Id
         ORDER BY o.Id DESC");
 ?>  
@@ -78,12 +78,9 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mb-4">
         <div class="container-fluid">
-            <a class="navbar-brand" href="waiter.php">Заказы</a>
+            <a class="navbar-brand" href="courier.php">Заказы</a>
             <div class="collapse navbar-collapse" id="navbarWaiter">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="addOrder.php">Создать заказ</a>
-                    </li>
                 </ul>
                 <span class="navbar-text me-3">Привет, <?= $username ?></span>
                 <a href="../functions/logout.php" class="btn btn-outline-danger">Выйти</a>
@@ -100,6 +97,7 @@
                         <th>Клиент</th>
                         <th>Блюда</th>
                         <th>Сумма</th>
+                        <th>Адрес</th>
                         <th>Статус</th>
                         <th>Действие</th>
                     </tr>
@@ -111,6 +109,7 @@
                         <td><?= $o['ClientSurname'].' '.$o['ClientName'] ?></td>
                         <td><?= $o['Dishes'] ?: '—' ?></td>
                         <td><?= $o['TotalSum'] ?> ₽</td>
+                        <td><?= $o['Address'] ?></td>
                         <td><?= ucfirst($o['Status']) ?></td>
                         <td>
                             <form method="post" class="d-flex gap-1">
@@ -119,6 +118,8 @@
                                     <option value="accepted" <?= $o['Status']=='accepted'?'selected':'' ?>>Принят</option>
                                     <option value="progress" <?= $o['Status']=='progress'?'selected':'' ?>>Готовится</option>
                                     <option value="ready" <?= $o['Status']=='ready'?'selected':'' ?>>Готов</option>
+                                    <option value="delivery" <?= $o['Status']=='delivery'?'selected':'' ?>>В доставке</option>
+                                    <option value="delivered" <?= $o['Status']=='delivered'?'selected':'' ?>>Доставлен</option>
                                 </select>
                                 <button class="btn btn-sm btn-primary">Сохранить</button>
                             </form>

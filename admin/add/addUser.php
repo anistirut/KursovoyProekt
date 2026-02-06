@@ -13,7 +13,7 @@
                     header("Location: ../../client/client.php");
                     exit;
                 } elseif ($role == 'waiter') {
-                    header("Location: ../../waiter/waiter.php");
+                    header("Location: ../../courier/courier.php");
                     exit;
                 }
             }
@@ -134,7 +134,7 @@
             <label for="role" class="form-label">Роль</label>
             <select class="form-select" id="role" name="role" required>
                 <option value="client" selected>client</option>
-                <option value="waiter">waiter</option>
+                <option value="courier">courier</option>
                 <option value="admin">admin</option>
             </select>
         </div>
